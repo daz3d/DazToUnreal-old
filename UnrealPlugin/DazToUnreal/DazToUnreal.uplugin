@@ -1,0 +1,32 @@
+{
+	"FileVersion": 3,
+	"Version": 3,
+	"VersionName": "3.0",
+	"FriendlyName": "DazToUnreal",
+	"Description": "",
+	"Category": "Other",
+	"CreatedBy": "David Vodhanel",
+	"CreatedByURL": "",
+	"DocsURL": "",
+	"MarketplaceURL": "com.epicgames.launcher://ue/marketplace/content/070a312bc04c48bcb1a4d193aaddf73e",
+	"SupportURL": "",
+	"EngineVersion": "4.25.0",
+	"CanContainContent": true,
+	"Installed": true,
+	"Modules": [
+		{
+			"Name": "DazToUnreal",
+			"Type": "Editor",
+			"LoadingPhase": "Default",
+			"WhitelistPlatforms": [
+				"Win64"
+			]
+		}
+	],
+	"Plugins": [
+		{
+			"Name": "EditorScriptingUtilities",
+			"Enabled": true
+		}
+	]
+}
