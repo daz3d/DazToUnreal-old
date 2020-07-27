@@ -6,6 +6,7 @@
 #include "DazToUnrealCommands.h"
 #include "DazToUnrealMaterials.h"
 #include "DazToUnrealUtils.h"
+#include "DazToUnrealFbx.h"
 
 #include "LevelEditor.h"
 #include "Widgets/Docking/SDockTab.h"
@@ -568,6 +569,32 @@ UObject* FDazToUnrealModule::ImportFromDaz(const FString& FBXPath, const FString
 			break;
 		}
 	}
+
+
+	// If this is a skeleton mesh, but a root bone wasn't found, it may be a scene under a group node or something similar
+	// So create a root node.
+	/*if (AssetType == DazAssetType::SkeletalMesh && RootBone == nullptr)
+	{
+		RootBoneName = AssetName;
+
+		FbxSkeleton* NewRootNodeAttribute = FbxSkeleton::Create(Scene, TCHAR_TO_UTF8(TEXT("root")));
+		NewRootNodeAttribute->SetSkeletonType(FbxSkeleton::eRoot);
+		NewRootNodeAttribute->Size.Set(1.0);
+		RootBone = FbxNode::Create(Scene, TCHAR_TO_UTF8(TEXT("root")));
+		RootBone->SetNodeAttribute(NewRootNodeAttribute);
+		RootBone->LclTranslation.Set(FbxVector4(0.0, 00.0, 0.0));
+		
+
+		for (int ChildIndex = RootNode->GetChildCount() - 1; ChildIndex >= 0; --ChildIndex)
+		{
+			FbxNode * ChildNode = RootNode->GetChild(ChildIndex);
+			RootBone->AddChild(ChildNode);
+		}
+
+		RootNode->AddChild(RootBone);
+	}*/
+
+	FDazToUnrealFbx::RenameDuplicateBones(RootBone);
 
 	struct local
 	{
