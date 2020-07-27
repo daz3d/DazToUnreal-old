@@ -1,4 +1,4 @@
-# ${1:Daz To Unreal - Unreal Engine Plugin}
+# Daz To Unreal - Unreal Engine Plugin
 This is the Unreal Engine side plugin for the Daz To Unreal tool.
 ## Building the Plugin for Windows
 To build the plugin with the Unreal Engine source you should first have the Unreal Engine building on your system.  You can get it at https://github.com/EpicGames
