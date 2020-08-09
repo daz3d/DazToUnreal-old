@@ -159,6 +159,10 @@ DazToUnrealDialog::DazToUnrealDialog(QWidget *parent) :
 	{
 		morphsEnabledCheckBox->setChecked(settings->value("MorphsEnabled").toBool());
 	}
+	if (!settings->value("SubdivisionEnabled").isNull())
+	{
+		subdivisionEnabledCheckBox->setChecked(settings->value("SubdivisionEnabled").toBool());
+	}
 	if (!settings->value("FBXExportVersion").isNull())
 	{
 		int index = fbxVersionCombo->findText(settings->value("FBXExportVersion").toString());
