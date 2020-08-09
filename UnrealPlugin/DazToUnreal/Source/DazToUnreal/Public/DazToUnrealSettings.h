@@ -23,6 +23,7 @@ public:
 		AnimationImportDirectory.Path = TEXT("/Game/DazToUnreal/Animation");
 		SkeletonCopyDirectory.Path = TEXT("/Game/DazToUnreal/Assets");
 		MaterialCopyDirectory.Path = TEXT("/Game/DazToUnreal/Assets");
+		FrameZeroIsReferencePose = false;
 		Genesis1Skeleton = FSoftObjectPath(TEXT("/DazToUnreal/Genesis1BaseSkeleton.Genesis1BaseSkeleton"));
 		Genesis3Skeleton = FSoftObjectPath(TEXT("/DazToUnreal/Genesis3BaseSkeleton.Genesis3BaseSkeleton"));
 		Genesis8Skeleton = FSoftObjectPath(TEXT("/DazToUnreal/Genesis8BaseSkeleton.Genesis8BaseSkeleton"));
@@ -107,6 +108,10 @@ public:
 	/** Directory of an ImageMagick installation */
 	UPROPERTY(config, EditAnywhere, Category = PluginSettings)
 		FDirectoryPath ImageMagickDirectory;
+
+	/** Directory of an ImageMagick installation */
+	UPROPERTY(config, EditAnywhere, Category = PluginSettings)
+		bool FrameZeroIsReferencePose;
 
 	/** Skeleton to use for Genesis 1 characters */
 	UPROPERTY(config, EditAnywhere, Category = SkeletonSettings, meta = (AllowedClasses = "Skeleton"))

@@ -1415,6 +1415,7 @@ UObject* FDazToUnrealModule::ImportFBXAsset(const FString& SourcePath, const FSt
 		FbxFactory->ImportUI->Skeleton = Skeleton;
 		FbxFactory->ImportUI->SkeletalMeshImportData->bImportMorphTargets = true;
 		FbxFactory->ImportUI->bImportAnimations = true;
+		FbxFactory->ImportUI->SkeletalMeshImportData->bUseT0AsRefPose = CachedSettings->FrameZeroIsReferencePose;
 		FbxFactory->ImportUI->MeshTypeToImport = FBXIT_SkeletalMesh;
 	}
 	if (AssetType == DazAssetType::StaticMesh)
