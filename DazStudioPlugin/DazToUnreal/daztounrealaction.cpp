@@ -90,6 +90,7 @@ void DazToUnrealAction::executeAction()
 		int port = dlg->portEdit->text().toInt();
 		bool ExportMorphs = dlg->morphsEnabledCheckBox->isChecked();
 		bool ExportSubdivisions = dlg->subdivisionEnabledCheckBox->isChecked();
+		bool ShowFbxDialog = dlg->showFbxDialogCheckBox->isChecked();
 
 		// Set subdivisions before FBX export
 		SubdivisionDialog* subdivisionDialog = SubdivisionDialog::Get(dlg);
@@ -131,7 +132,7 @@ void DazToUnrealAction::executeAction()
 			}
 
 			FileSettings->setStringValue("format", dlg->fbxVersionCombo->currentText());
-			FileSettings->setIntValue("RunSilent", 1);
+			FileSettings->setIntValue("RunSilent", !ShowFbxDialog);
 
 			FileSettings->setBoolValue("doEmbed", false);
 			FileSettings->setBoolValue("doCopyTextures", false);

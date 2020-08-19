@@ -111,6 +111,9 @@ DazToUnrealDialog::DazToUnrealDialog(QWidget *parent) :
 	fbxVersionCombo->addItem("FBX 2009 -- Ascii");
 	connect(fbxVersionCombo, SIGNAL(currentIndexChanged(const QString &)), this, SLOT(HandleFBXVersionChange(const QString &)));
 
+	// Show FBX Dialog option
+	showFbxDialogCheckBox = new QCheckBox("", this);
+
 	// Add the widget to the basic dialog
 	mainLayout->addRow("Asset Name", assetNameEdit);
 	mainLayout->addRow("Asset Type", assetTypeCombo);
@@ -120,6 +123,7 @@ DazToUnrealDialog::DazToUnrealDialog(QWidget *parent) :
 	advancedLayout->addRow("Intermediate Folder", intermediateFolderLayout);
 	advancedLayout->addRow("Port", portEdit);
 	advancedLayout->addRow("FBX Version", fbxVersionCombo);
+	advancedLayout->addRow("Show FBX Dialog", showFbxDialogCheckBox);
 	addLayout(mainLayout);
 
 	// Advanced
@@ -162,6 +166,10 @@ DazToUnrealDialog::DazToUnrealDialog(QWidget *parent) :
 	if (!settings->value("SubdivisionEnabled").isNull())
 	{
 		subdivisionEnabledCheckBox->setChecked(settings->value("SubdivisionEnabled").toBool());
+	}
+	if (!settings->value("ShowFBXDialog").isNull())
+	{
+		showFbxDialogCheckBox->setChecked(settings->value("ShowFBXDialog").toBool());
 	}
 	if (!settings->value("FBXExportVersion").isNull())
 	{
@@ -246,4 +254,9 @@ void DazToUnrealDialog::HandleSubdivisionCheckBoxChange(int state)
 void DazToUnrealDialog::HandleFBXVersionChange(const QString& fbxVersion)
 {
 	settings->setValue("FBXExportVersion", fbxVersion);
+}
+
+void DazToUnrealDialog::HandleShowFbxDialogCheckBoxChange(int state)
+{
+	settings->setValue("ShowFBXDialog", state == Qt::Checked);
 }
