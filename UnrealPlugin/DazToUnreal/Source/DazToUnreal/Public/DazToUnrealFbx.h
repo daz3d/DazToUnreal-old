@@ -61,6 +61,8 @@ class FDazToUnrealFbx
 {
 public:
 	static void RenameDuplicateBones(FbxNode* RootNode);
+	static void FixBoneRotations(FbxNode* RootNode);
+	static void FixBindPose(FbxScene* Scene, FbxNode* RootNode);
 
 private:
 	static void RenameDuplicateBones(FbxNode* RootNode, TMap<FString, int>& ExistingBones);

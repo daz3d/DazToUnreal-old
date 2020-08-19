@@ -32,6 +32,8 @@
 #include "ObjectTools.h"
 #include "Factories/FbxFactory.h"
 #include "Factories/FbxImportUI.h"
+#include "FbxImporter.h"
+#include "AssetImportTask.h"
 #include "Factories/MaterialImportHelpers.h"
 #include "Factories/FbxTextureImportData.h"
 #include "Factories/FbxSkeletalMeshImportData.h"
@@ -570,10 +572,16 @@ UObject* FDazToUnrealModule::ImportFromDaz(const FString& FBXPath, const FString
 		}
 	}
 
+	// Daz Studio puts the base bone rotations in a different place than Unreal expects them.
+	/*if (AssetType == DazAssetType::SkeletalMesh && RootBone)
+	{
+		FDazToUnrealFbx::FixBoneRotations(RootBone);
+		FDazToUnrealFbx::FixBindPose(Scene, RootBone);
+	}*/
 
 	// If this is a skeleton mesh, but a root bone wasn't found, it may be a scene under a group node or something similar
 	// So create a root node.
-	/*if (AssetType == DazAssetType::SkeletalMesh && RootBone == nullptr)
+	if (AssetType == DazAssetType::SkeletalMesh && RootBone == nullptr)
 	{
 		RootBoneName = AssetName;
 
@@ -589,10 +597,17 @@ UObject* FDazToUnrealModule::ImportFromDaz(const FString& FBXPath, const FString
 		{
 			FbxNode * ChildNode = RootNode->GetChild(ChildIndex);
 			RootBone->AddChild(ChildNode);
+			if (FbxSkeleton* ChildSkeleton = ChildNode->GetSkeleton())
+			{
+				if (ChildSkeleton->GetSkeletonType() == FbxSkeleton::eRoot)
+				{
+					ChildSkeleton->SetSkeletonType(FbxSkeleton::eLimb);
+				}
+			}
 		}
 
 		RootNode->AddChild(RootBone);
-	}*/
+	}
 
 	FDazToUnrealFbx::RenameDuplicateBones(RootBone);
 
@@ -1445,7 +1460,28 @@ UObject* FDazToUnrealModule::ImportFBXAsset(const FString& SourcePath, const FSt
 	{
 		ImportData->DestinationPath = CachedSettings->AnimationImportDirectory.Path;
 	}
-	TArray<UObject*> ImportedAssets = AssetToolsModule.Get().ImportAssetsAutomated(ImportData);
+
+	TArray<UObject*> ImportedAssets;
+	if (CachedSettings->ShowFBXImportDialog)
+	{
+		UAssetImportTask* AssetImportTask = NewObject<UAssetImportTask>();
+		AssetImportTask->Filename = ImportData->Filenames[0];
+		AssetImportTask->DestinationPath = ImportData->DestinationPath;
+		AssetImportTask->Options = FbxFactory->ImportUI;
+		AssetImportTask->Factory = FbxFactory;
+		TArray< UAssetImportTask* > ImportTasks;
+		ImportTasks.Add(AssetImportTask);
+		AssetToolsModule.Get().ImportAssetTasks(ImportTasks);
+		for (FString ImportedPath : AssetImportTask->ImportedObjectPaths)
+		{
+			FSoftObjectPath SoftObjectPath(ImportedPath);
+			ImportedAssets.Add(SoftObjectPath.TryLoad());
+		}
+	}
+	else
+	{
+		ImportedAssets = AssetToolsModule.Get().ImportAssetsAutomated(ImportData);
+	}
 
 	FContentBrowserModule& ContentBrowserModule = FModuleManager::Get().LoadModuleChecked<FContentBrowserModule>("ContentBrowser");
 	ContentBrowserModule.Get().SyncBrowserToAssets(ImportedAssets);
@@ -1502,40 +1538,6 @@ void FDazToUnrealModule::InstallDazStudioPlugin()
 	FString InstallerPath = IPluginManager::Get().FindPlugin("DazToUnreal")->GetBaseDir() / TEXT("Resources")/ TEXT("DazToUnrealSetup.exe");
 	FString InstallerAbsolutePath = IFileManager::Get().ConvertToAbsolutePathForExternalAppForRead(*InstallerPath);
 	FPlatformProcess::LaunchFileInDefaultExternalApplication(*InstallerAbsolutePath, NULL, ELaunchVerb::Open);
-}
-
-
-bool FDazToUnrealModule::IsImageMagickInstalled()
-{
-	// If a path to ImageMagick was set in the settings...
-	const UDazToUnrealSettings* CachedSettings = GetDefault<UDazToUnrealSettings>();
-	if (CachedSettings->ImageMagickDirectory.Path.IsEmpty())
-	{
-		return false;
-	}
-	
-	if (!FPaths::DirectoryExists(CachedSettings->ImageMagickDirectory.Path))
-	{
-		return false;
-	}
-	
-	//...and the executable exists there, return true
-	return (FPaths::FileExists(FPaths::Combine(CachedSettings->ImageMagickDirectory.Path, TEXT("magick.exe"))));
-}
-
-void FDazToUnrealModule::ConvertTiffToPNG(FString TiffPath)
-{
-	if (!IsImageMagickInstalled())
-	{
-		return;
-	}
-	const UDazToUnrealSettings* CachedSettings = GetDefault<UDazToUnrealSettings>();
-
-	FString PNGPath = FPaths::ChangeExtension(TiffPath, TEXT("png"));
-	FString ImageMagickPath = FPaths::Combine(CachedSettings->ImageMagickDirectory.Path, TEXT("magick.exe"));
-
-	FString Params = TiffPath + TEXT(" -auto-orient ") + PNGPath;
-	FPlatformProcess::CreateProc(*ImageMagickPath, *Params, true, false, false, nullptr, 0, nullptr, nullptr);
 }
 
 #undef LOCTEXT_NAMESPACE

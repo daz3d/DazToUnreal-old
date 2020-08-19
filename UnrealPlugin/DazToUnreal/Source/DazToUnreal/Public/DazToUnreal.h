@@ -104,12 +104,6 @@ private:
 	void SetMaterialProperty(const FString& MaterialName, const FString& PropertyName, const FString& PropertyType, const FString& PropertyValue, TMap<FString, TArray<FDUFTextureProperty>>& MaterialProperties);
 	FString GetSubSurfaceAlphaTexture(const DazCharacterType CharacterType, const FString& MaterialName);
 
-	/** Looks for an installation of ImageMagick*/
-	bool IsImageMagickInstalled();
-
-	/** Converts a Tiff to a PNG using ImageMagick if available*/
-	void ConvertTiffToPNG(FString TiffPath);
-	
 	/** Converts a hex string to a Linear color.*/
 	FLinearColor FromHex(const FString& HexString);
 };

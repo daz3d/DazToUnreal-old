@@ -21,8 +21,7 @@ public:
 		Port = 32345;
 		ImportDirectory.Path = TEXT("/Game/DazToUnreal");
 		AnimationImportDirectory.Path = TEXT("/Game/DazToUnreal/Animation");
-		SkeletonCopyDirectory.Path = TEXT("/Game/DazToUnreal/Assets");
-		MaterialCopyDirectory.Path = TEXT("/Game/DazToUnreal/Assets");
+		ShowFBXImportDialog = false;
 		FrameZeroIsReferencePose = false;
 		Genesis1Skeleton = FSoftObjectPath(TEXT("/DazToUnreal/Genesis1BaseSkeleton.Genesis1BaseSkeleton"));
 		Genesis3Skeleton = FSoftObjectPath(TEXT("/DazToUnreal/Genesis3BaseSkeleton.Genesis3BaseSkeleton"));
@@ -97,19 +96,11 @@ public:
 	UPROPERTY(config, EditAnywhere, Category = PluginSettings, meta = (RelativeToGameContentDir, LongPackageName))
 		FDirectoryPath AnimationImportDirectory;
 
-	/** Directory skeleton assets will be copied to */
+	/** Show the FBX Import dialog when importing the udpated FBX file */
 	UPROPERTY(config, EditAnywhere, Category = PluginSettings, meta = (RelativeToGameContentDir, LongPackageName))
-		FDirectoryPath SkeletonCopyDirectory;
+		bool ShowFBXImportDialog;
 
-	/** Directory material assets will be copied to */
-	UPROPERTY(config, EditAnywhere, Category = PluginSettings, meta = (RelativeToGameContentDir, LongPackageName))
-		FDirectoryPath MaterialCopyDirectory;
-
-	/** Directory of an ImageMagick installation */
-	UPROPERTY(config, EditAnywhere, Category = PluginSettings)
-		FDirectoryPath ImageMagickDirectory;
-
-	/** Directory of an ImageMagick installation */
+	/** Set the default pose for the character to match frame 0 */
 	UPROPERTY(config, EditAnywhere, Category = PluginSettings)
 		bool FrameZeroIsReferencePose;
 
