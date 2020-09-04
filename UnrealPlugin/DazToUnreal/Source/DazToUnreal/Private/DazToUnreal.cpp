@@ -420,7 +420,7 @@ UObject* FDazToUnrealModule::ImportFromDaz(const FString& FBXPath, const FString
 				FColor DiffuseColor = FColor::FromHex(Parts[3]);
 				double Opacity = FCString::Atod(*Parts[4]);
 				FString TexturePath = Parts[5];
-				FString TextureName = FPaths::GetBaseFilename(TexturePath).Replace(TEXT(" "), TEXT("_")).Replace(TEXT("&"), TEXT("_"));
+				FString TextureName = FDazToUnrealUtils::SanitizeName(FPaths::GetBaseFilename(TexturePath));
 
 				if (!MaterialProperties.Contains(MaterialName))
 				{
@@ -481,7 +481,7 @@ UObject* FDazToUnrealModule::ImportFromDaz(const FString& FBXPath, const FString
 				FColor DiffuseColor = FColor::FromHex(Parts[5]);
 				double Opacity = FCString::Atod(*Parts[6]);
 				FString TexturePath = Parts[7];
-				FString TextureName = FPaths::GetBaseFilename(TexturePath).Replace(TEXT(" "), TEXT("_")).Replace(TEXT("&"), TEXT("_")).Replace(TEXT("("), TEXT("_")).Replace(TEXT(")"), TEXT("_"));
+				FString TextureName = FDazToUnrealUtils::SanitizeName(FPaths::GetBaseFilename(TexturePath));
 
 				if (!MaterialProperties.Contains(MaterialName))
 				{
