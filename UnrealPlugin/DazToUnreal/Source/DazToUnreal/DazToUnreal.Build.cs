@@ -15,6 +15,7 @@ public class DazToUnreal : ModuleRules
 				"Core",
 				"Sockets",
 				"Networking",
+				"DeveloperSettings"
 				// ... add other public dependencies that you statically link with here ...
 			}
 			);
